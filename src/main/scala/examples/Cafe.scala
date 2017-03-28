@@ -1,9 +1,9 @@
 package examples
 
 class Cafe {
-  def buyCoffee(cc: CreditCard): Coffee = {
+  def buyCoffee(cc: CreditCard, p: Payments): Coffee = {
     val cup = new Coffee()
-    cc.charge(cup.price)    // side-effect
+    p.charge(cc, cup.price)    // remove side-effect and call Payment object
     cup
   }
 }
