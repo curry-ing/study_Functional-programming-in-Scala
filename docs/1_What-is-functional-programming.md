@@ -1,18 +1,16 @@
 # 1. 함수형 프로그래밍이란 무엇인가?
 
-> - 부수효과를 제거한 함수형 프로그래밍 작성 및 그 이점
+#### 부수효과를 제거한 함수형 프로그래밍 작성 및 그 이점
 - **참조 투명성**(referential transparency)
 - **치환 모형**(substitution model)
 
 
-- **부수효과**가 없는 **순수함수** 들로만 이루어진 프로그램
+#### **부수효과**가 없는 **순수함수** 들로만 이루어진 프로그램
 - 부수효과: 그냥 결과를 돌려주는 일 외의 다른 임의의 일을 수행하는 함수
 - 프로그램 작성**방식**에 대한 제약일 뿐 표현 가능한 프로그램의 **종류**에 대한 제약이 아님
 
 ## 1.1 FP의 이점: 간단한 예제 하나
-
 ### 1.1.1 부수 효과가 있는 프로그램
-
 ```scala
 class Cafe {
   def buyCoffee(cc: CreditCard): Coffee = {
@@ -40,6 +38,7 @@ class Cafe {
   }
 }
 ```
+
 #### 부수효과
 - `p.charce` 호출시 가능성이 여전히 상존:
 
@@ -67,7 +66,7 @@ class Cafe {
 - `buyCoffee`가 `Coffee`뿐 아니라 **청구건을 하나의 값으로 반환**하도록 프로그램 수정
 - 청구건의 **생성** 문제가 청구건의 **처리** 또는 **연동** 문제와 분리됨
 
-- `Charge`의 구현: [Charge.scala](../src/main/scala/examples/chapter1/Charge.scala)
+- `Charge`의 구현: [Charge.scala](../src/main/scala/examples/chapter1/Charge.scalaX)
   - `CreditCard`와 `amount`를 담는다
   - `combine`: 동일한 `CreditCard`를 취합하는 메서드
 
@@ -88,7 +87,7 @@ def coalesce(charges: List[Charge]): List[Charge] =
 
 ## 1.2 (순수) 함수란 구체적으로 무엇인가?
 #### 수학적인 정의
-- 입력 형식이 **A**이고, 출력 형식이 **B**인 함수 **f**는, 형식이 **A**인 모든 값 **a**를 각각 형식이 **B**인 모든 값 **b**에 연관시키되, **b**가 오직 **a**에 의해서만 결정된다는 조건을 만족하는 계산
+- 입력 형식이 **A**이고, 출력 형식이 **B**인 함수 **f**(`f(A) = B`)는, 형식이 **A**인 모든 값 **a**를 각각 형식이 **B**인 모든 값 **b**에 연관시키되, **b**가 오직 **a**에 의해서만 결정된다는 조건을 만족하는 계산
 #### 스칼라에서는...
 - `A => B`라고 표기
 - 주어진 입력(A)으로 뭔가를 계산하여 어떤 결과(B)를 반환하는 외에 다른 일을 하지 않는 것
@@ -97,7 +96,7 @@ def coalesce(charges: List[Charge]): List[Charge] =
 #### 참조 투명성
 - 함수가 아닌 **표현식**의 한 속성
   - 표현식: 프로그램 구성 코드 중 하나의 결과로 평가될 수 있는 임의의 코드 조각
-  - ex> `2 + 3` 은 `2`와 `3`이라는 표현식에 `+`라는 함수를 적용시킨 또 하나의 표현식, 이는 이 표현식에 대한 평가 결과인 `5`라는 표현식으로 대체해도 의미가 같다
+  - ex> `2 + 3`이라는 표현식에 대한 평가 결과인 `5`로 대체해도 의미가 같다
 - 임의의 프로그램에서 만일 어떤 표현식을 그 평과 결과로 바꾸어도 의미가 변하지 않는다면, 이 표현식은 **참조에 투명한 것**
 - 어떤 함수를 참조에 투명한 인수들로 호출하면 그 함수도 참조에 투명
 
@@ -106,4 +105,16 @@ def coalesce(charges: List[Charge]): List[Charge] =
 이 표현식 `e`는 **참조에 투명하다**(referentially transparent)
 만일 표현식 `f(x)`가 참조에 투명한 모든 `x`에 대해 참조에 투명하면, 함수 `f`는 **순수하다**(pure)
 
+## 1.3 참조 투명성, 순수성, 그리고 치환 모형
+#### buyCoffee에 비추어 보는 참조 투명성
+```scala
+def buyCoffee(cc: CreditCard): Coffee = {
+  val cup = new Coffee()
+  cc.charge(cup.price)
+  cup
+}
+```
 
+- `cc.charge(cup.price)` 의 반환 형식이 무엇이든, `buyCoffee`는 그 반환값을 폐기
+- `buyCoffee(aliceCreditCard)`의 평가 결과는 그냥 `cup`(= `new Coffee()`).
+- 하지만 `buyCoffee`는 `cc.charge`를 통해 신용카드 회사에 대금을 청구하는 부수 효과로 인해 **참조 투명성**을 보장하지 않는다.

@@ -20,4 +20,3 @@ class MyModule {
     formatResult("factorial", 7, factorial)
   }
 }
-
