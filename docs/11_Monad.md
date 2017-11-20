@@ -218,7 +218,7 @@ Gen.nextString.flatMap(name =>
 Gen.nextString.flatMap(name => 
   Gen.nextInt.map(price =>
     Item(name, price))).flatMap(item => 
-      Gen.nextInt.map(quantity >
+      Gen.nextInt.map(quantity =>
         Order(item, quantity)))
 ```
 
@@ -280,7 +280,7 @@ def unit[A](a: => A): F[A]
 -  **왼쪽 항등법칙**, **오른쪽 항등법칙**으로 표현
 ```scala
 compose(f, unit) == f
-compose(unit, f) == 
+compose(unit, f) == f
 ```
 
 ##### 위 항등법칙을 `flatMap`을 통해 표현 가능 
