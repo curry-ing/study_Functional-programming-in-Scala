@@ -387,6 +387,7 @@ object IntStateMonad extends Monad[IntState] {
   def unit[A](a : => A): IntState[A] = State(s => (a, s))
   def flatMap[A, B](st: IntState[A])(f: A => IntState[B]): IntState[B] = st flatMap f 
 }
+```
 - 구체적인 상태 형식마다 이런 개별적 Monad 인스턴스를 작성해야 한다면? -> **비효율적**
 - 익명 함수에서 underscore의 사용과 비슷하게 **형식 수준에서 람다 비슷한 어떤 것** 존재
 
