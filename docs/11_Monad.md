@@ -9,7 +9,7 @@ def map[A, B](oa: Option[A])(f: A => B): Option[B]
 ```
 ```scala
 trait Functor[F[_]] {
-  def mappA, B](fa: F[A])(f: A => B): F[B]
+  def map[A, B](fa: F[A])(f: A => B): F[B]
 }
 ```
 - `map`을 형식 생성자 `F[_]`로 매개변수화함 
@@ -118,7 +118,7 @@ trait Mon[F[_]] {
 ```scala
 def map[A, B](f: A => B): Gen[B] = flatMap(a => unit(f(a))
 ```
-- `map`: `flatMap`과 **`unit`**을 이용해 구현 가능
+- `map`: `flatMap`과 `unit`을 이용해 구현 가능
 - 최소한의 기본수단 집합: `flatMap` & `unit`
 
 #### Monad 특질 정의
@@ -290,15 +290,14 @@ flatMap(unit(y))(f) == f(y)
 ```
 
 ## 11.5 도대체 모나드란 무엇인가? 
-### 인터페이스
+### 인터페이스  
 - 어떤 추상 자료 형식에 대한 비교적 완비된 API를 제공하는 무엇.
 - Linked List와 Array는 내부적인 구현은 다르지만 Application 입장에서는 공통의 **인터페이스** 공유 
-
 - Monoid와 같이 Monad는 좀 더 추상적이고 대수적인 **인터페이스**
 - Monad 조합기들은 주어진, 그리고 모나드가 될 수 없는 자료형식에 대한 전체 API중 일부만 차지 
 - 한 두 형식을 일반화하는 것이 아니라, Monad 인터페이스와 법칙을 만족하는 **아주 다양하고 많은 형식을 일반화**
-
-### 모나드란
+  
+### 모나드란  
 > **Monad**는 **Monad적 조합기들의 최소 집합 중 하나**를 **결합법칙과 항등법칙을 만족**하도록 구현한 것 
 
 #### Monad 조합기들의 최소 집합 
