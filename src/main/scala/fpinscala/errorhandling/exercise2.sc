@@ -24,13 +24,22 @@ def map3[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] = {
 }
 
 // 4.4
-def sequence[A](a: List[Option[A]]): Option[List[A]] = ???
+def sequence[A](a: List[Option[A]]):Option[List[A]] = a match {
+  case Nil => Some(Nil)
+  case h :: t => h.flatMap(x => sequence(t).map(x :: _))
+}
 
 // 4.5
-def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = ???
+def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = a match {
+  case Nil => Some(Nil)
+//  case h :: t => map2(f(h), traverse(t)(f))(_ :: _)
+  case h :: t => f(h).flatMap(a => traverse(t)(f) map(a :: _))
+}
 
 // 4.7
-def sequence[E, A](es: List[Either[E, A]]): Either[E, List[A]] = ???
+def sequence2[E, A](es: List[Either[E, A]]): Either[E, List[A]] = es match {
+  case h :: t => h.flatMap((a: A) => Right(a :: sequence2(t).r))
+}
 
-def traverse[E, A, B](as: List[A])(f: A => Either[E, B]): Either[E, List[B]] = ???
+//def traverse[E, A, B](as: List[A])(f: A => Either[E, B]): Either[E, List[B]] = ???
 

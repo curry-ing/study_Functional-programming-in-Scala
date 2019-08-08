@@ -34,10 +34,33 @@ sealed trait Option[+A] {
       case None => None
       case Some(a) => if (f(a)) Some(a) else None
     }
-//    flatMap(a => if(f(a)) Some(a) else None)
 }
 
 case class Some[+A](get: A) extends Option[A]
+
 case object None extends Option[Nothing]
 
+object Option {
+  // 4.3 두 Option값을 이항 함수(binary function)를 이용해서 결합하는 일반적인 함수 map2를 작성하라
+  // 두 Option중 하나라도 None이면 map2의 결과 역시 None이어야 함
+  def map2[A, B, C](a: Option[A], b: Option[B])(f: (A, B) => C): Option[C] =
+    a flatMap(x => b.map(y => f(x, y)))
 
+  // 4.4 Option들의 목록을 받고 그 목록에 있는 모든 Some 값으로 구성된 목록을 담은 `Option`을 돌려주는 함수 `sequence`를 작성
+  // 원래의 목록에 None이 하나라도 있으면 함수의 결과도 None이어야 한다.
+  // 그렇지 않으면 원래의 목록에 있는 모든 값의 목록을 담은 Some을 반환할 것
+  def sequence[A](a: List[Option[A]]): Option[List[A]] = a match {
+    case Nil => Some(Nil)
+    case h :: t => h.flatMap(x => sequence(t).map(x :: _))
+  }
+
+  // 4.5 목록을 순회하며 동시에 각 요소에 함수를 매핑하는 traverse를 구현할 것
+  // 또한 sequence를 traverse를 이용해 구현 해 볼 것
+  def traverse[A, B](a: List[A])(f: A => Option[B]): Option[List[B]] = a match {
+    case Nil => Some(Nil)
+    case h :: t => map2(f(h), traverse(t)(f))(_ :: _)
+//    case h :: t => f(h).flatMap(a => traverse(t)(f) map (a :: _))
+  }
+
+  def sequence2[A](a: List[Option[A]]): Option[List[A]] = traverse(a)(identity)
+}
